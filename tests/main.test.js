@@ -16,12 +16,12 @@ describe('Mapping use cases', () => {
 	context('when there is a match', () => {
 
 		it('Article Card use case', () => {
-			const result = subject('content', 'articleCard');
+			const result = subject('content', 'article-card');
 			expect(result).to.equal('articleCard');
 		});
 
 		it('Stream List Card use case', () => {
-			const result = subject('content', 'streamListCard');
+			const result = subject('content', 'stream-list-card');
 			expect(result).to.equal('streamListCard');
 		});
 	});

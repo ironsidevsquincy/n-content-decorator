@@ -5,10 +5,10 @@ const models = require('./models/index');
 module.exports = (content, useCase) => {
 
 	switch (useCase) {
-		case 'articleCard':
+		case 'article-card':
 			return models.articleCard(content);
 			break;
-		case 'streamListCard':
+		case 'stream-list-card':
 			return models.streamListCard(content);
 			break;
 		default:
