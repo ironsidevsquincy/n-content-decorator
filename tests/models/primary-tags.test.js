@@ -7,8 +7,8 @@ const proxyquire = require('proxyquire');
 
 const tagTransformStub = sinon.stub();
 
-const subject = proxyquire('../../lib/primary-tags-transform', {
-	'./tag-transform': tagTransformStub
+const subject = proxyquire('../../models/primary-tags', {
+	'../lib/tag-transform': tagTransformStub
 });
 const fixture = require('../fixtures/basic-article.json');
 
@@ -19,14 +19,21 @@ describe('Primary Tags Transform', () => {
 	context('overall response', () => {
 
 		it('returns theme, section, brand and tag properties', () => {
-			const result = subject(fixture.metadata);
-			expect(Object.keys(result).length).to.equal(4);
+			const result = subject(fixture);
 			expect(result).to.have.all.keys([
 				'primaryTheme',
 				'primarySection',
 				'primaryBrand',
 				'primaryTag'
 			]);
+		});
+
+		it('returns just the primaryTag if summary option passed', () => {
+			const result = subject(fixture, 'summary');
+			expect(result).to.have.all.keys([
+				'primaryTag'
+			]);
+
 		});
 
 	});
@@ -45,26 +52,26 @@ describe('Primary Tags Transform', () => {
 
 
 		it('First choice: Primary Theme', () => {
-			const metadata = [primaryTheme, primarySection, primaryBrand];
-			const result = subject(metadata);
+			const content = {metadata: [primaryTheme, primarySection, primaryBrand]};
+			const result = subject(content);
 			expect(result.primaryTag.primary).to.equal('theme');
 		});
 
 		it('Second choice: Primary Section', () => {
-			const metadata = [primarySection, primaryBrand];
-			const result = subject(metadata);
+			const content = {metadata: [primarySection, primaryBrand]};
+			const result = subject(content);
 			expect(result.primaryTag.primary).to.equal('section');
 		});
 
 		it('Third choice: Primary Brand', () => {
-			const metadata = [primaryBrand];
-			const result = subject(metadata);
+			const content = {metadata: [primaryBrand]};
+			const result = subject(content);
 			expect(result.primaryTag.primary).to.equal('brand');
 		});
 
 		it('returns undefined if no theme, section or brand', () => {
-			const metadata = [];
-			const result = subject(metadata);
+			const content = {metadata: []};
+			const result = subject(content);
 			expect(result.primaryTag).to.be.undefined;
 		});
 

@@ -8,6 +8,9 @@ module.exports = (content, useCase) => {
 		case 'articleCard':
 			return models.articleCard(content);
 			break;
+		case 'streamListCard':
+			return models.streamListCard(content);
+			break;
 		default:
 			return content;
 			break;

@@ -6,7 +6,8 @@ const proxyquire = require('proxyquire');
 
 const subject = proxyquire('../main', {
 	'./models/index': {
-		articleCard: () => 'articleCard'
+		articleCard: () => 'articleCard',
+		streamListCard: () => 'streamListCard'
 	}
 });
 
@@ -17,6 +18,11 @@ describe('Mapping use cases', () => {
 		it('Article Card use case', () => {
 			const result = subject('content', 'articleCard');
 			expect(result).to.equal('articleCard');
+		});
+
+		it('Stream List Card use case', () => {
+			const result = subject('content', 'streamListCard');
+			expect(result).to.equal('streamListCard');
 		});
 	});
 
