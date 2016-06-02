@@ -6,6 +6,7 @@ Transforms content from Elastic Search into summarised form for specified use-ca
 Use cases supported;
 
 `article-card` : compatible with n-section usage
+
 `stream-list-card` : used for card in stream list on stream page.
 
 ## Example usage
