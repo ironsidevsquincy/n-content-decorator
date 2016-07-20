@@ -1,6 +1,6 @@
 {
   "name": "ft-n-content-model",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "main": "main.js",
   "dependencies": {
     "cheerio": "^0.19.0",
@@ -13,6 +13,7 @@
     "istanbul": "^0.4.2",
     "lintspaces-cli": "^0.1.1",
     "mocha": "^2.2.5",
+    "npm-prepublish": "^1.2.1",
     "proxyquire": "^1.7.9",
     "sinon": "^1.17.3"
   }
