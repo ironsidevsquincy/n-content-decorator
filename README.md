@@ -7,6 +7,8 @@ Use cases supported;
 
 `article-card` : compatible with n-section usage
 
+`article-card-no-image` : as article card, but with main image removed
+
 `stream-list-card` : used for card in stream list on stream page.
 
 ## Example usage

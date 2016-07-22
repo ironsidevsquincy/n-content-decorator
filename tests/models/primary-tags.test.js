@@ -1,6 +1,3 @@
-/*global describe, it, context*/
-'use strict';
-
 const expect = require('chai').expect;
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
@@ -41,13 +38,13 @@ describe('Primary Tags Transform', () => {
 	context('calculating the primary tag', () => {
 
 		const primaryTheme = {
-			primary: "theme"
+			primary: 'theme'
 		};
 		const primarySection = {
-			primary: "section"
+			primary: 'section'
 		};
 		const primaryBrand = {
-			primary: "brand"
+			primary: 'brand'
 		};
 
 

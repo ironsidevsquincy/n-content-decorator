@@ -1,5 +1,3 @@
-'use strict';
-
 const tagTransform = require('../lib/tag-transform');
 
 const propertyEquals = (property, value) => item => item[property] === value;

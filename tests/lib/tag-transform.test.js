@@ -1,18 +1,15 @@
-/*global describe, it, context*/
-'use strict';
-
 const expect = require('chai').expect;
 
 const subject = require('../../lib/tag-transform');
 
 const fixture = {
-	"idV1": "TnN0ZWluX09OX0FGVE1fT05fMTQyMTAz-T04=",
-	"prefLabel": "G7",
-	"taxonomy": "organisations",
-	"attributes": [
+	'idV1': 'TnN0ZWluX09OX0FGVE1fT05fMTQyMTAz-T04=',
+	'prefLabel': 'G7',
+	'taxonomy': 'organisations',
+	'attributes': [
 		{
-			"key": "is_company",
-			"value": "false"
+			'key': 'is_company',
+			'value': 'false'
 		}
 	]
 };
