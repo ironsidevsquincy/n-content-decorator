@@ -1,5 +1,3 @@
-/*global describe, it, context*/
-
 const expect = require('chai').expect;
 
 const subject = require('../../lib/image-format-transform');

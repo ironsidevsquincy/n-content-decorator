@@ -1,5 +1,3 @@
-'use strict';
-
 const basic = require('./basic');
 const extended = require('./extended');
 const opinionData = require('./opinion-data');
@@ -7,10 +5,10 @@ const primaryTags = require('./primary-tags');
 
 module.exports = {
 
-	articleCard: content => {
+	articleCard: (content, options) => {
 		return Object.assign({},
 			basic(content),
-			extended(content),
+			extended(content, options),
 			primaryTags(content),
 			opinionData(content)
 		);

@@ -1,5 +1,3 @@
-'use strict';
-
 const authorsTransform = require('../lib/authors-transform');
 const tagTransform = require('../lib/tag-transform');
 
