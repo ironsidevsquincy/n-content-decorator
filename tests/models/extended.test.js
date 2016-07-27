@@ -29,7 +29,8 @@ describe('Extended model transform', () => {
 			'isEditorsChoice',
 			'branding',
 			'primaryImage',
-			'imageFormat'
+			'imageFormat',
+			'imageRatio'
 		]);
 	});
 
