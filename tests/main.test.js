@@ -1,33 +1,41 @@
 const expect = require('chai').expect;
 const proxyquire = require('proxyquire');
+const sinon = require('sinon');
+
+const basicStub = sinon.stub();
+const extendedStub = sinon.stub();
+const tagAndBrandingStub = sinon.stub();
 
 const subject = proxyquire('../main', {
-	'./models/index': {
-		articleCard: () => 'articleCard',
-		streamListCard: () => 'streamListCard'
-	}
+	'./models/basic': basicStub,
+	'./models/extended': extendedStub,
+	'./models/tag-and-branding': tagAndBrandingStub
 });
 
-describe('Mapping use cases', () => {
+describe('Calling models', () => {
 
-	context('when there is a match', () => {
-
-		it('Article Card use case', () => {
-			const result = subject('content', 'article-card');
-			expect(result).to.equal('articleCard');
-		});
-
-		it('Stream List Card use case', () => {
-			const result = subject('content', 'stream-list-card');
-			expect(result).to.equal('streamListCard');
-		});
+	beforeEach(() => {
+		basicStub.reset();
+		extendedStub.reset();
+		tagAndBrandingStub.reset();
 	});
 
-	context('when there is not a match', () => {
+	context('general', () => {
 
-		it('returns the content', () => {
-			const result = subject('content', 'noUseCase');
-			expect(result).to.equal('content');
+		it('calls all three models', () => {
+			subject();
+			expect(basicStub.calledOnce).to.be.true;
+			expect(extendedStub.calledOnce).to.be.true;
+			expect(tagAndBrandingStub.calledOnce).to.be.true;
+		});
+
+	});
+
+	context('with specific use cases', () => {
+
+		it('passes the use case option to the tag and branding model', () => {
+			subject({}, {useCase: 'useCase'});
+			expect(tagAndBrandingStub.calledWith({},{useCase: 'useCase'})).to.be.true;
 		});
 	});
 

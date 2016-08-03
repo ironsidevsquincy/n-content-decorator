@@ -46,6 +46,15 @@ describe('Image Format', () => {
 
 	});
 
+	context('with no dimensions', () => {
+
+		it('returns undefined', () => {
+			const result = subject({});
+			expect(result).to.be.undefined;
+		});
+
+	});
+
 	context('with no main image', () => {
 
 		it('returns undefined', () => {

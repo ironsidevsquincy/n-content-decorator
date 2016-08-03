@@ -1,20 +1,20 @@
-const branding = require('ft-n-article-branding');
-const primaryImage = require('../lib/primary-image-transform');
-const imageFormat = require('../lib/image-format-transform');
-const imageRatio = require('../lib/image-ratio-transform');
-const tagTransform = require('../lib/tag-transform');
+const imageTransform = require('../lib/image-transform');
+const liveBlogTransform = require('../lib/live-blog-transform');
+const relatedContentTransform = require('../lib/related-content-transform');
 const subheadingTransform = require('../lib/subheading-transform');
+const summaryTransform = require('../lib/summary-transform');
+const typeTransform = require('../lib/type-transform');
 
-module.exports = (content, options) => {
+module.exports = content => {
 
 	return {
-		summary: content.summaries && content.summaries.length ? content.summaries[0] : null,
+		hideTimestampState: content.type === 'FastFt',
+		image: imageTransform(content.mainImage || content.primaryImage),
+		liveBlog: liveBlogTransform(content),
+		relatedContent: relatedContentTransform(content),
 		subheading: subheadingTransform(content),
-		isEditorsChoice: content.standout && content.standout.editorsChoice,
-		branding: tagTransform(branding(content.metadata)),
-		primaryImage: primaryImage(content.mainImage, options),
-		imageFormat: imageFormat(content.mainImage),
-		imageRatio: imageRatio(content.mainImage)
+		summary: summaryTransform(content),
+		type: typeTransform(content)
 	};
 
 };

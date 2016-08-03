@@ -7,7 +7,7 @@ const subject = require('../../lib/subheading-transform');
 
 describe('Subheading', () => {
 
-		describe('Has a summary', () => {
+		context('Has a summary', () => {
 			let fixture = {
 				summaries: ['This is a longer summary', 'This isn\'t']
 			};
@@ -17,7 +17,7 @@ describe('Subheading', () => {
 			});
 		});
 
-		describe('Has no summary but an opening', () => {
+		context('Has no summary but an opening', () => {
 			let fixture = {
 				summaries: [],
 				openingXML: '<p>Text <a href="http://www.ft.com/">Link Text</a></p><p>Ignored</p>'
@@ -29,7 +29,7 @@ describe('Subheading', () => {
 
 		});
 
-		describe('Has no summary or opening, but does have a bodyXML', () => {
+		context('Has no summary or opening, but does have a bodyXML', () => {
 			let fixture = {
 				summaries: [],
 				openingXML: undefined,
@@ -38,6 +38,19 @@ describe('Subheading', () => {
 
 			it('should use the text of the first p of bodyXML', () => {
 				expect(subject(fixture)).to.equal('Text Link Text');
+			});
+
+		});
+
+		context('Has nothing resembling a summary', () => {
+			let fixture = {
+				summaries: [],
+				openingXML: undefined,
+				bodyXML: undefined
+			};
+
+			it('should return undefined', () => {
+				expect(subject(fixture)).to.be.undefined;
 			});
 
 		});

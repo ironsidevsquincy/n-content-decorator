@@ -1,19 +1,13 @@
-const models = require('./models/index');
+const basic = require('./models/basic');
+const extended = require('./models/extended');
+const tagAndBranding = require('./models/tag-and-branding');
 
-module.exports = (content, useCase) => {
+module.exports = (content, options) => {
 
-	switch (useCase) {
-		case 'article-card':
-			return models.articleCard(content);
-			break;
-		case 'article-card-no-image':
-			return models.articleCard(content, {removeImage: true});
-			break;
-		case 'stream-list-card':
-			return models.streamListCard(content);
-			break;
-		default:
-			return content;
-			break;
-	};
+		return Object.assign({},
+			basic(content),
+			extended(content),
+			tagAndBranding(content, options)
+		);
+
 };
