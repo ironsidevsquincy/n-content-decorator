@@ -33,6 +33,12 @@ describe('Tag and Branding', () => {
 			expect(result.tag.tagValue).to.be.true;
 		});
 
+		it('returns undefined if content type is a live blog', () => {
+			brandingStub.returns([{brandingValue: true}, {brandValue: true}]);
+			const result = subject({ type: 'LiveBlog' }, options);
+			expect(result).to.be.undefined;
+		});
+
 	});
 
 	context('stream list card use case', () => {

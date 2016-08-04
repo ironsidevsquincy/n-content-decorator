@@ -145,19 +145,4 @@ describe('Branding Transform', () => {
 
 	});
 
-	context('is a Live Blog', () => {
-
-		beforeEach(() => {
-			getBrandingStub.returns(undefined);
-			isCommentTagStub.returns(true);
-		});
-
-		it('doesn\'t return a brand', () => {
-			const content = { type: 'LiveBlog', tags: [ {property: 'value'} ] };
-			const result = subject(content);
-			expect(result[0]).to.be.undefined;
-			expect(result[1]).to.be.undefined;
-		});
-	});
-
 });
