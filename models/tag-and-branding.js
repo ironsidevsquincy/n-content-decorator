@@ -10,7 +10,7 @@ module.exports = (content, options) => {
 	const brand = brandingResult[1];
 	const tag = getPrimaryTag(content, options);
 
-	if (options && options.useCase === 'article-card') {
+	if (options && options.useCase === 'article-card' && content.type !== 'LiveBlog') {
 		if (brand) {
 			return { brand };
 		} else {
