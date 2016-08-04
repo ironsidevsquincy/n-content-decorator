@@ -3,25 +3,40 @@ const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 
 const getBrandingStub = sinon.stub();
+const isCommentTagStub = sinon.stub();
 
 const subject = proxyquire('../../lib/branding-transform', {
 	'ft-n-article-branding': getBrandingStub,
-	'./tag-transform': (tag) => tag
+	'./tag-transform': (tag) => tag,
+	'./utils/is-comment-tag': isCommentTagStub
 });
 
 describe('Branding Transform', () => {
 
 	beforeEach(() => {
 		getBrandingStub.reset();
+		isCommentTagStub.reset();
 	});
 
 	context('already has branding property', () => {
 
+		beforeEach(() => {
+			isCommentTagStub.returns(true);
+		});
+
 		it('returns the existing branding value', () => {
-			const content = { branding: { brandingValue: true }, metadata: [{ taxonomy: 'genre', idV1: 'OA==-R2VucmVz' }]};
+			const content = { branding: { brandingValue: true }, metadata: [ {property: 'value'} ] };
 			const result = subject(content);
 			expect(getBrandingStub.called).to.be.false;
 			expect(result[0].brandingValue).to.be.true;
+		});
+
+		it('if branding is an author it takes the headshot from authors', () => {
+			const branding = { taxonomy: 'authors' };
+			const authors = [ { headshot: true } ];
+			const metadata = [ {property: 'value'} ];
+			const content = { branding, authors, metadata };
+			expect(subject(content)[0].headshot).to.be.true;
 		});
 
 	});
@@ -30,10 +45,11 @@ describe('Branding Transform', () => {
 
 		beforeEach(() => {
 			getBrandingStub.returns({ brandingValue: true });
+			isCommentTagStub.returns(true);
 		});
 
 		it('returns equal branding and brand values', () => {
-			const content = { metadata: [{ taxonomy: 'genre', idV1: 'OA==-R2VucmVz' }]};
+			const content = { metadata: [ {property: 'value'} ]};
 			const result = subject(content);
 			expect(result[0]).to.deep.equal(result[1]);
 			expect(result[0].brandingValue).to.be.true;
@@ -77,6 +93,7 @@ describe('Branding Transform', () => {
 
 		beforeEach(() => {
 			getBrandingStub.returns(undefined);
+			isCommentTagStub.returns(true);
 		});
 
 		context('article is NOT editors choice', () => {
@@ -84,19 +101,11 @@ describe('Branding Transform', () => {
 			it('returns the Author as the brand', () => {
 				const firstAuthor = { name: 'First Author' };
 				const secondAuthor = { name: 'Second Author' };
-				const metadata = [{ taxonomy: 'genre', idV1: 'OA==-R2VucmVz' }]
+				const metadata = [ {property: 'value'} ]
 				const content = { authors: [firstAuthor, secondAuthor], metadata };
 				const result = subject(content);
 				expect(result[0]).to.be.undefined;
 				expect(result[1].title).to.equal('First Author');
-			});
-
-		});
-
-		context('isEditors Choice is NOT already set', () => {
-
-			it('returns Editor\'s pick as the brand', () => {
-
 			});
 
 		});
@@ -107,12 +116,13 @@ describe('Branding Transform', () => {
 
 		beforeEach(() => {
 			getBrandingStub.returns(undefined);
+			isCommentTagStub.returns(true);
 		});
 
 		context('content has metadata', () => {
 
 			it('returns branding undefined and brand as Opinion', () => {
-				const content = { metadata: [{ taxonomy: 'genre', idV1: 'OA==-R2VucmVz' }]};
+				const content = { metadata: [ {property: 'value'} ] };
 				const result = subject(content);
 				expect(result[0]).to.be.undefined;
 				expect(result[1].title).to.equal('Opinion');
@@ -124,7 +134,7 @@ describe('Branding Transform', () => {
 		context('content has tags not metadata', () => {
 
 			it('returns branding undefined and brand as Opinion', () => {
-				const content = { tags: [{ taxonomy: 'genre', name: 'Comment' }]};
+				const content = { tags: [ {property: 'value'} ] };
 				const result = subject(content);
 				expect(result[0]).to.be.undefined;
 				expect(result[1].title).to.equal('Opinion');
@@ -133,6 +143,21 @@ describe('Branding Transform', () => {
 
 		});
 
+	});
+
+	context('is a Live Blog', () => {
+
+		beforeEach(() => {
+			getBrandingStub.returns(undefined);
+			isCommentTagStub.returns(true);
+		});
+
+		it('doesn\'t return a brand', () => {
+			const content = { type: 'LiveBlog', tags: [ {property: 'value'} ] };
+			const result = subject(content);
+			expect(result[0]).to.be.undefined;
+			expect(result[1]).to.be.undefined;
+		});
 	});
 
 });

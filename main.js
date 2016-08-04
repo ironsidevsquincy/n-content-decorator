@@ -6,7 +6,7 @@ module.exports = (content, options) => {
 
 		return Object.assign({},
 			basic(content),
-			extended(content),
+			extended(content, options),
 			tagAndBranding(content, options)
 		);
 

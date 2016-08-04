@@ -1,9 +1,19 @@
 const expect = require('chai').expect;
+const proxyquire = require('proxyquire');
+const sinon = require('sinon');
 
-const subject = require('../../lib/type-transform');
+const isCommentTagStub = sinon.stub();
+
+const subject = proxyquire('../../lib/type-transform', {
+	'./utils/is-comment-tag': isCommentTagStub
+});
 const fixture = require('../fixtures/basic-article.json');
 
 describe('Type Transform', () => {
+
+	beforeEach(() => {
+		isCommentTagStub.reset();
+	});
 
 	it('returns \'live-blog\' for a LiveBlog', () => {
 		const content = {type: 'LiveBlog'};
@@ -15,24 +25,39 @@ describe('Type Transform', () => {
 		expect(subject(content)).to.equal('fast-ft');
 	});
 
-	it('returns \'opinion\' for genre of Comment (ES sourced data)', () => {
-		const content = { metadata: [ { taxonomy: 'genre', name: 'Comment', idV1: 'OA==-R2VucmVz'} ] };
-		expect(subject(content)).to.equal('opinion');
+	context('with commemt tags / metadata', () => {
+
+		beforeEach(() => {
+			isCommentTagStub.returns(true);
+		});
+
+		it('returns \'opinion\' for genre of Comment (ES sourced data)', () => {
+			const content = { metadata: [ { property: 'value' } ] };
+			expect(subject(content)).to.equal('opinion');
+		});
+
+		it('returns \'opinion\' for genre of Comment (graphQL Api sourced data)', () => {
+			const content = { tags: [ { property: 'value' } ] };
+			expect(subject(content)).to.equal('opinion');
+		});
+
 	});
 
-	it('returns \'opinion\' for genre of Comment (graphQL Api sourced data)', () => {
-		const content = { tags: [ { taxonomy: 'genre', name: 'Comment', id: 'OA==-R2VucmVz'} ] };
-		expect(subject(content)).to.equal('opinion');
-	});
 
 	it('returns \'editors-pick\' for Editors Choice (ES sourced data)', () => {
 		const content = { standout: {editorsChoice: true} };
-		expect(subject(content)).to.equal('editors-pick');
+		expect(subject(content, {useCase: 'article-card'})).to.equal('editors-pick');
 	});
 
 	it('returns \'editors-pick\' for Editors Choice (graphQL Api sourced data)', () => {
 		const content = { isEditorsChoice: true };
-		expect(subject(content)).to.equal('editors-pick');
+		expect(subject(content, {useCase: 'article-card'})).to.equal('editors-pick');
+	});
+
+	it('does not return \'editors-pick\' for Editors choice when not article card use case', () => {
+		const content = { standout: {editorsChoice: true} };
+		expect(subject(content)).to.equal('article');
+
 	});
 
 	it('returns \'article\' for everything else', () => {
@@ -41,37 +66,41 @@ describe('Type Transform', () => {
 
 	context('prioritising the attributes', () => {
 
+		beforeEach(() => {
+			isCommentTagStub.returns(true);
+		});
+
 		it('prioritises LiveBlog 1st', () => {
 			const content = {
 				type: 'LiveBlog',
-				tags: [ { taxonomy: 'genre', name: 'Comment', id: 'OA==-R2VucmVz' } ],
+				tags: [ { property: 'value' } ],
 				standout: {editorsChoice: true}
 			};
-			expect(subject(content)).to.equal('live-blog');
+			expect(subject(content, {useCase: 'article-card'})).to.equal('live-blog');
 		});
 
-		it('prioritises FastFt 2nd', () => {
+		it('prioritises editors pick 2nd', () => {
 			const content = {
 				type: 'FastFt',
-				tags: [ { taxonomy: 'genre', name: 'Comment', id: 'OA==-R2VucmVz' } ],
+				tags: [ { property: 'value' } ],
 				standout: {editorsChoice: true}
 			};
-			expect(subject(content)).to.equal('fast-ft');
+			expect(subject(content, {useCase: 'article-card'})).to.equal('editors-pick');
 		});
 
-		it('prioritises opinion 3rd', () => {
+		it('prioritises FastFt 3rd', () => {
 			const content = {
-				tags: [ { taxonomy: 'genre', name: 'Comment', id: 'OA==-R2VucmVz' } ],
-				standout: {editorsChoice: true}
+				type: 'FastFt',
+				tags: [ { property: 'value' } ],
 			};
-			expect(subject(content)).to.equal('opinion');
+			expect(subject(content, {useCase: 'article-card'})).to.equal('fast-ft');
 		});
 
-		it('prioritises editors pick 4th', () => {
+		it('prioritises opinion 4th', () => {
 			const content = {
-				standout: {editorsChoice: true}
+				tags: [ { property: 'value' } ]
 			};
-			expect(subject(content)).to.equal('editors-pick');
+			expect(subject(content, {useCase: 'article-card'})).to.equal('opinion');
 		});
 
 	});

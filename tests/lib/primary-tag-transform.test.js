@@ -3,12 +3,18 @@ const sinon = require('sinon');
 const proxyquire = require('proxyquire');
 
 const tagTransformStub = sinon.stub();
+const excludedTaxonomiesStub = sinon.stub();
 
 const subject = proxyquire('../../lib/primary-tag-transform', {
-	'./tag-transform': tagTransformStub
+	'./tag-transform': tagTransformStub,
+	'./utils/excluded-taxonomies': excludedTaxonomiesStub
 });
 
 tagTransformStub.returnsArg(0);
+const excludedTaxonomies = ['organisations', 'regions', 'people'];
+excludedTaxonomiesStub.withArgs({ excludeTaxonomies: true }).returns(excludedTaxonomies);
+excludedTaxonomiesStub.withArgs({ excludeTaxonomies: false }).returns([]);
+excludedTaxonomiesStub.withArgs(undefined).returns([]);
 
 describe('Primary Tags Transform', () => {
 
