@@ -41,7 +41,7 @@ describe('Related Content Transform', () => {
 		let content;
 
 		beforeEach(() => {
-			content = { id: 'a' };
+			content = { id: 'a', relatedContent: [] };
 		});
 
 		context('with primaryTheme or primarySection', () => {
