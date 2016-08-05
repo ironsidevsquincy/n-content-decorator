@@ -33,14 +33,15 @@ describe('Tag Transformation', () => {
 		const result = subject(fixtureES);
 
 		it('transforms the tag into neat model', () => {
-			expect(Object.keys(result).length).to.equal(6);
+			expect(Object.keys(result).length).to.equal(7);
 			expect(result).to.have.all.keys([
 				'id',
 				'url',
 				'name',
 				'title',
 				'taxonomy',
-				'headshot'
+				'headshot',
+				'items'
 			]);
 		});
 
