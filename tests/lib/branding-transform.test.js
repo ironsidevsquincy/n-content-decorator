@@ -39,6 +39,14 @@ describe('Branding Transform', () => {
 			expect(subject(content)[0].headshot).to.be.true;
 		});
 
+		it('does not fail if branding is authors and there are no author tags', () => {
+			const branding = { taxonomy: 'authors' };
+			const authors = undefined;
+			const metadata = [ {property: 'value'} ];
+			const content = { branding, authors, metadata };
+			expect(subject(content)[0].headshot).to.be.undefined;
+		});
+
 	});
 
 	context('has branding data and is comment, not Editors Choice', () => {
