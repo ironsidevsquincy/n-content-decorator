@@ -4,18 +4,21 @@ const sinon = require('sinon');
 
 const getBrandingStub = sinon.stub();
 const isCommentTagStub = sinon.stub();
+const primaryTagTransformStub = sinon.stub();
 
 const subject = proxyquire('../../lib/branding-transform', {
 	'ft-n-article-branding': getBrandingStub,
 	'./tag-transform': (tag) => tag,
-	'./utils/is-comment-tag': isCommentTagStub
+	'./utils/is-comment-tag': isCommentTagStub,
+	'./primary-tag-transform': primaryTagTransformStub
 });
 
 describe('Branding Transform', () => {
 
-	beforeEach(() => {
+	afterEach(() => {
 		getBrandingStub.reset();
 		isCommentTagStub.reset();
+		primaryTagTransformStub.reset();
 	});
 
 	context('already has branding property', () => {
@@ -25,26 +28,29 @@ describe('Branding Transform', () => {
 		});
 
 		it('returns the existing branding value', () => {
-			const content = { branding: { brandingValue: true }, metadata: [ {property: 'value'} ] };
+			const content = { branding: { brandingValue: true, id: 'id' }, metadata: [ {property: 'value'} ] };
 			const result = subject(content);
 			expect(getBrandingStub.called).to.be.false;
 			expect(result[0].brandingValue).to.be.true;
+			expect(primaryTagTransformStub.called).to.be.false;
 		});
 
 		it('if branding is an author it takes the headshot from authors', () => {
-			const branding = { taxonomy: 'authors' };
+			const branding = { taxonomy: 'authors', id: 'id' };
 			const authors = [ { headshot: true } ];
 			const metadata = [ {property: 'value'} ];
 			const content = { branding, authors, metadata };
 			expect(subject(content)[0].headshot).to.be.true;
+			expect(primaryTagTransformStub.called).to.be.false;
 		});
 
 		it('does not fail if branding is authors and there are no author tags', () => {
-			const branding = { taxonomy: 'authors' };
+			const branding = { taxonomy: 'authors', id: 'id' };
 			const authors = undefined;
 			const metadata = [ {property: 'value'} ];
 			const content = { branding, authors, metadata };
 			expect(subject(content)[0].headshot).to.be.undefined;
+			expect(primaryTagTransformStub.called).to.be.false;
 		});
 
 	});
@@ -52,7 +58,7 @@ describe('Branding Transform', () => {
 	context('has branding data and is comment, not Editors Choice', () => {
 
 		beforeEach(() => {
-			getBrandingStub.returns({ brandingValue: true });
+			getBrandingStub.returns({ brandingValue: true, id: 'id' });
 			isCommentTagStub.returns(true);
 		});
 
@@ -69,6 +75,7 @@ describe('Branding Transform', () => {
 
 		beforeEach(() => {
 			getBrandingStub.returns(undefined);
+			primaryTagTransformStub.returns({ id: 'primaryTagId'});
 		});
 
 		context('isEditors Choice NOT already set', () => {
@@ -79,6 +86,8 @@ describe('Branding Transform', () => {
 				expect(result[0]).to.be.undefined;
 				expect(result[1].title).to.equal('Editor’s Pick');
 				expect(result[1].type).to.equal('editors-pick');
+				expect(primaryTagTransformStub.calledOnce).to.be.true;
+				expect(result[1].id).to.equal('primaryTagId');
 			});
 
 		});
@@ -91,6 +100,8 @@ describe('Branding Transform', () => {
 				expect(result[0]).to.be.undefined;
 				expect(result[1].title).to.equal('Editor’s Pick');
 				expect(result[1].type).to.equal('editors-pick');
+				expect(primaryTagTransformStub.calledOnce).to.be.true;
+				expect(result[1].id).to.equal('primaryTagId');
 			});
 
 		});
@@ -107,13 +118,14 @@ describe('Branding Transform', () => {
 		context('article is NOT editors choice', () => {
 
 			it('returns the Author as the brand', () => {
-				const firstAuthor = { name: 'First Author' };
+				const firstAuthor = { name: 'First Author', idV1: 'firstAuthorId' };
 				const secondAuthor = { name: 'Second Author' };
 				const metadata = [ {property: 'value'} ]
 				const content = { authors: [firstAuthor, secondAuthor], metadata };
 				const result = subject(content);
 				expect(result[0]).to.be.undefined;
 				expect(result[1].title).to.equal('First Author');
+				expect(primaryTagTransformStub.called).to.be.false;
 			});
 
 		});
@@ -125,6 +137,7 @@ describe('Branding Transform', () => {
 		beforeEach(() => {
 			getBrandingStub.returns(undefined);
 			isCommentTagStub.returns(true);
+			primaryTagTransformStub.returns({ id: 'primaryTagId'});
 		});
 
 		context('content has metadata', () => {
@@ -135,6 +148,8 @@ describe('Branding Transform', () => {
 				expect(result[0]).to.be.undefined;
 				expect(result[1].title).to.equal('Opinion');
 				expect(result[1].type).to.equal('opinion');
+				expect(primaryTagTransformStub.calledOnce).to.be.true;
+				expect(result[1].id).to.equal('primaryTagId');
 			});
 
 		});
@@ -147,6 +162,8 @@ describe('Branding Transform', () => {
 				expect(result[0]).to.be.undefined;
 				expect(result[1].title).to.equal('Opinion');
 				expect(result[1].type).to.equal('opinion');
+				expect(primaryTagTransformStub.calledOnce).to.be.true;
+				expect(result[1].id).to.equal('primaryTagId');
 			});
 
 		});
