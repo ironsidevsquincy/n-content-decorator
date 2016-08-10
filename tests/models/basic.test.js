@@ -7,13 +7,14 @@ describe('Basic model transform', () => {
 
 	it('returns the expected properties', () => {
 		const result = subject(content);
-		expect(Object.keys(result).length).to.equal(5);
+		expect(Object.keys(result).length).to.equal(6);
 		expect(result).to.have.all.keys([
 			'id',
 			'url',
 			'title',
 			'published',
-			'lastPublished'
+			'lastPublished',
+			'premium'
 		]);
 	});
 
@@ -54,6 +55,29 @@ describe('Basic model transform', () => {
 				const result = subject({ initialPublishedDate: 'ipd', publishedDate: 'pd' });
 				expect(result.published).to.equal('ipd');
 				expect(result.lastPublished).to.equal('pd');
+			});
+
+		});
+
+	});
+
+	context('premium property', () => {
+
+		context('with no webUrl', () => {
+			const result = subject({});
+			expect(result.premium).to.be.undefined;
+		});
+
+		context('with a webUrl', () => {
+
+			context('content is premium', () => {
+				const result = subject({webUrl: 'http://www.ft.com/cms/s/3/768029c2-54b8-11e6-befd-2fc0c26b3c60.html'});
+				expect(result.premium).to.be.true;
+			});
+
+			context('content is not premium', () => {
+				const result = subject({webUrl: 'http://www.ft.com/cms/s/0/7987e5c2-54b0-11e6-9664-e0bdc13c3bef.html'});
+				expect(result.premium).to.be.false;
 			});
 
 		});
