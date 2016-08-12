@@ -2,7 +2,6 @@ const expect = require('chai').expect;
 const proxyquire = require('proxyquire');
 
 const subject = proxyquire('../../lib/image-transform', {
-	'./image-format-transform': () => true,
 	'./image-ratio-transform': () => true
 });
 
@@ -23,10 +22,10 @@ describe('Primary Image Transform', () => {
 
 	context('with an Elastic Source sourced image', () => {
 
-		it('returns the main image with format, ratio and url properties', () => {
+		it('returns the main image with ratio and url properties', () => {
 			const result = subject(fixtureES);
-			expect(Object.keys(result).length).to.equal(3);
-			expect(result).to.have.all.keys(['format', 'ratio', 'url']);
+			expect(Object.keys(result).length).to.equal(2);
+			expect(result).to.have.all.keys(['ratio', 'url']);
 			expect(result.url).to.equal('http://com.ft.imagepublish.prod.s3.amazonaws.com/c8f995d6-2325-11e6-aa98-db1e01fabc0c');
 		});
 
@@ -34,10 +33,10 @@ describe('Primary Image Transform', () => {
 
 	context('with a graphQL Api sourced image', () => {
 
-		it('returns the main image with format, ratio and url properties', () => {
+		it('returns the main image with ratio and url properties', () => {
 			const result = subject(fixtureGraphQlApi);
-			expect(Object.keys(result).length).to.equal(3);
-			expect(result).to.have.all.keys(['format', 'ratio', 'url']);
+			expect(Object.keys(result).length).to.equal(2);
+			expect(result).to.have.all.keys(['ratio', 'url']);
 			expect(result.url).to.equal('http://com.ft.imagepublish.prod.s3.amazonaws.com/c8f995d6-2325-11e6-aa98-db1e01fabc0c');
 		});
 
