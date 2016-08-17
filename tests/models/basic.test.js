@@ -7,10 +7,11 @@ describe('Basic model transform', () => {
 
 	it('returns the expected properties', () => {
 		const result = subject(content);
-		expect(Object.keys(result).length).to.equal(6);
+		expect(Object.keys(result).length).to.equal(7);
 		expect(result).to.have.all.keys([
 			'id',
 			'url',
+			'fullUrl',
 			'title',
 			'published',
 			'lastPublished',
