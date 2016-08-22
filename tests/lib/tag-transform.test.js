@@ -11,7 +11,8 @@ const fixtureES = {
 			'key': 'is_company',
 			'value': 'false'
 		}
-	]
+	],
+	'url': 'https://www.ft.com/topics/organisations/G7'
 };
 
 const fixtureGraphQLApi = {
@@ -23,7 +24,8 @@ const fixtureGraphQLApi = {
 			'key': 'is_company',
 			'value': 'false'
 		}
-	]
+	],
+	'url': 'https://www.ft.com/topics/organisations/G7'
 };
 
 describe('Tag Transformation', () => {
@@ -51,17 +53,23 @@ describe('Tag Transformation', () => {
 		});
 
 		it('formats the url for the tag', () => {
-			expect(result.url).to.equal('/stream/organisationsId/TnN0ZWluX09OX0FGVE1fT05fMTQyMTAz-T04=')
+			expect(result.url).to.equal('/topics/organisations/G7')
 		});
 	});
 
 	context('with a graphQL Api sourced tag', () => {
 
+		const result = subject(fixtureGraphQLApi);
+
 		it('maps the correct values for id and name', () => {
-			const result = subject(fixtureGraphQLApi);
 			expect(result.id).to.equal('TnN0ZWluX09OX0FGVE1fT05fMTQyMTAz-T04=');
 			expect(result.name).to.equal('G7');
 		});
+
+		it('formats the url for the tag', () => {
+			expect(result.url).to.equal('/topics/organisations/G7')
+		});
+
 	});
 
 
