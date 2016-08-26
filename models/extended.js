@@ -11,7 +11,7 @@ module.exports = (content, options) => {
 		hideTimestampState: content.type === 'FastFt',
 		image: imageTransform(content.mainImage || content.primaryImage),
 		liveBlog: liveBlogTransform(content),
-		relatedContent: relatedContentTransform(content, options),
+		relatedContent: relatedContentTransform(content),
 		subheading: subheadingTransform(content),
 		summary: summaryTransform(content),
 		type: typeTransform(content, options)
