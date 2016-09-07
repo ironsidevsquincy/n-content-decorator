@@ -1,6 +1,13 @@
-const expect = require('chai').expect;
+'use strict';
 
-const subject = require('../../lib/tag-transform');
+const expect = require('chai').expect;
+const proxyquire = require('proxyquire');
+const sinon = require('sinon');
+
+const premiumTransformStub = sinon.stub();
+const subject = proxyquire('../../lib/tag-transform', {
+	'./premium-transform': premiumTransformStub
+});
 
 const fixtureES = {
 	'idV1': 'TnN0ZWluX09OX0FGVE1fT05fMTQyMTAz-T04=',
@@ -25,14 +32,28 @@ const fixtureGraphQLApi = {
 			'value': 'false'
 		}
 	],
-	'url': 'https://www.ft.com/topics/organisations/G7'
+	'url': 'https://www.ft.com/topics/organisations/G7',
+	'items': [
+		{
+			'id': 'relatedItemId',
+			'url': 'relatedItemUrl',
+			'webUrl': 'relatedItemWebUrl',
+			'title': 'relatedItemTitle'
+		}
+	]
 };
 
 describe('Tag Transformation', () => {
 
+	afterEach(() => {
+		premiumTransformStub.reset();
+	});
+
+	let result;
+
 	context('with an Elastic Search (ES) sourced tag', () => {
 
-		const result = subject(fixtureES);
+		result = subject(fixtureES);
 
 		it('transforms the tag into neat model', () => {
 			expect(Object.keys(result).length).to.equal(7);
@@ -53,13 +74,16 @@ describe('Tag Transformation', () => {
 		});
 
 		it('formats the url for the tag', () => {
-			expect(result.url).to.equal('/topics/organisations/G7')
+			expect(result.url).to.equal('/topics/organisations/G7');
 		});
 	});
 
-	context('with a graphQL Api sourced tag', () => {
+	context('with a graphQL API sourced tag', () => {
 
-		const result = subject(fixtureGraphQLApi);
+		beforeEach(() => {
+			premiumTransformStub.returns(true);
+			result = subject(fixtureGraphQLApi);
+		});
 
 		it('maps the correct values for id and name', () => {
 			expect(result.id).to.equal('TnN0ZWluX09OX0FGVE1fT05fMTQyMTAz-T04=');
@@ -67,11 +91,25 @@ describe('Tag Transformation', () => {
 		});
 
 		it('formats the url for the tag', () => {
-			expect(result.url).to.equal('/topics/organisations/G7')
+			expect(result.url).to.equal('/topics/organisations/G7');
+		});
+
+		it('acquires the premium status for its related items by calling premiumTransform', () => {
+			expect(premiumTransformStub.calledOnce).to.be.true;
 		});
 
 	});
 
+	context('with a graphQL API sourced tag which has no related items', () => {
+
+		it('acquires the premium status for its related items by calling premiumTransform', () => {
+			premiumTransformStub.returns(true);
+			fixtureGraphQLApi.items = null;
+			subject(fixtureGraphQLApi);
+			expect(premiumTransformStub.called).to.be.false;
+		});
+
+	});
 
 	context('without a tag', () => {
 

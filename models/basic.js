@@ -1,3 +1,5 @@
+const premiumTransform = require('../lib/premium-transform');
+
 module.exports = content => {
 
 	return {
@@ -7,7 +9,7 @@ module.exports = content => {
 		title: content.title,
 		published: content.initialPublishedDate || content.published,
 		lastPublished: content.publishedDate || content.lastPublished,
-		premium: content.webUrl && /\/cms\/s\/3\//.test(content.webUrl)
+		premium: content.webUrl && premiumTransform(content.webUrl)
 	};
 
 };

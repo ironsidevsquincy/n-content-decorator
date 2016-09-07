@@ -1,9 +1,18 @@
 const expect = require('chai').expect;
+const proxyquire = require('proxyquire');
+const sinon = require('sinon');
 
-const subject = require('../../models/basic');
+const premiumTransformStub = sinon.stub();
+const subject = proxyquire('../../models/basic', {
+	'../lib/premium-transform': premiumTransformStub
+});
 const content = require('../fixtures/basic-article.json');
 
 describe('Basic model transform', () => {
+
+	afterEach(() => {
+		premiumTransformStub.reset();
+	});
 
 	it('returns the expected properties', () => {
 		const result = subject(content);
@@ -64,21 +73,21 @@ describe('Basic model transform', () => {
 
 	context('premium property', () => {
 
-		context('with no webUrl', () => {
-			const result = subject({});
-			expect(result.premium).to.be.undefined;
-		});
+		context('content has a webUrl value', () => {
 
-		context('with a webUrl', () => {
-
-			context('content is premium', () => {
-				const result = subject({webUrl: 'http://www.ft.com/cms/s/3/768029c2-54b8-11e6-befd-2fc0c26b3c60.html'});
-				expect(result.premium).to.be.true;
+			it('will call premiumTransform to ascertain premium status of content', () => {
+				subject({ webUrl: 'foobar' });
+				expect(premiumTransformStub.calledOnce).to.be.true;
 			});
 
-			context('content is not premium', () => {
-				const result = subject({webUrl: 'http://www.ft.com/cms/s/0/7987e5c2-54b0-11e6-9664-e0bdc13c3bef.html'});
-				expect(result.premium).to.be.false;
+		});
+
+		context('content does not have a webUrl value', () => {
+
+			it('will not call premiumTransform and premium attribute value set to null', () => {
+				const result = subject({ webUrl: null });
+				expect(premiumTransformStub.called).to.be.false;
+				expect(result.premium).to.equal(null);
 			});
 
 		});
