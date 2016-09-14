@@ -23,7 +23,11 @@ describe('Calling models', () => {
 
 		it('applies the default options if not specified', () => {
 			subject();
-			expect(applyModelsStub.getCall(0).args[1]).to.have.all.keys(['mutateOriginal', 'useCase', 'excludeTaxonomies']);
+			expect(applyModelsStub.getCall(0).args[1]).to.have.all.keys([
+				'mutateOriginal',
+				'excludeTaxonomies',
+				'minorBranding'
+			]);
 		});
 
 		it('does not overwrite passed through options', () => {

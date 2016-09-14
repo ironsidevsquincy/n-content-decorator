@@ -14,14 +14,6 @@ Provides decoration for content sourced either directly from the next Elastic Se
 
 `false` is the default option and need not be passed in.
 
-###Use cases;
-
-`useCase: 'article-card'` compatible with n-section card usage.
-
-`useCase: 'stream-list-card'` used for card in stream list on stream page.
-
-`article-card` is the default option and need not be passed in.
-
 ###Excluded Taxonomies
 
 `excludeTaxonomies: true` prevents specific taxonomies (organisations, regions, people) from appearing in the tag that is returned.
@@ -29,6 +21,18 @@ Provides decoration for content sourced either directly from the next Elastic Se
 `excludeTaxonomies: false` leaves taxonomies unaffected.
 
 `false` is the default and need not be passed in.
+
+###Minor Branding
+
+Determines how brand (if content is associated with a brand) is displayed.
+
+`minorBranding: true` brand appears below standfirst and primary Tag is shown eg. as on stream list.
+
+`minorBranding: false` brand replaces primary Tag at the top of the card.
+
+`false` is the default option and need not be passed in.
+
+(NOTE: the intention is to migrate this display option to n-card rather than handle it here)
 
 ##Example usage
 

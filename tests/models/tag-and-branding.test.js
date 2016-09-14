@@ -15,9 +15,9 @@ describe('Tag and Branding', () => {
 		brandingStub.reset();
 	});
 
-	context('article card use case', () => {
+	context('without minor branding option (default)', () => {
 
-		const options = { useCase: 'article-card' };
+		const options = { minorBranding: false };
 
 		it('returns just brand, if brand exists', () => {
 			brandingStub.returns([{brandingValue: true}, {brandValue: true}]);
@@ -43,25 +43,13 @@ describe('Tag and Branding', () => {
 
 	context('stream list card use case', () => {
 
-		const options = { useCase: 'stream-list-card' };
+		const options = { minorBranding: true };
 
 		it('returns tag and branding', () => {
 			brandingStub.returns([{brandingValue: true}, {brandValue: true}]);
 			const result = subject({}, options);
 			expect(result.branding.brandingValue).to.be.true;
 			expect(result.tag.tagValue).to.be.true;
-		});
-
-	});
-
-	context('neither article or stream list card use case', () => {
-
-		const options = undefined;
-
-		it('does not return any thing', () => {
-			brandingStub.returns([{brandingValue: true}, {brandValue: true}]);
-			const result = subject({}, options);
-			expect(result).to.be.undefined;
 		});
 
 	});

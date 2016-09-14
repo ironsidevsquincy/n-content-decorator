@@ -4,8 +4,8 @@ module.exports = (content, options) => {
 
 	const optionsDefaults = {
 		mutateOriginal: false,
-		useCase: 'article-card',
-		excludeTaxonomies: false
+		excludeTaxonomies: false,
+		minorBranding: false
 	};
 
 	options = Object.assign(optionsDefaults, options);

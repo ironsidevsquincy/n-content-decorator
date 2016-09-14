@@ -10,13 +10,13 @@ module.exports = (content, options) => {
 	const brand = brandingResult[1];
 	const tag = getPrimaryTag(content, options);
 
-	if (options && options.useCase === 'article-card' && content.type !== 'LiveBlog') {
+	if (!options.minorBranding && content.type !== 'LiveBlog') {
 		if (brand) {
 			return { brand };
 		} else {
 			return { tag };
 		}
-	} else if (options && options.useCase === 'stream-list-card') {
+	} else if (options.minorBranding) {
 		return {
 			tag,
 			branding
