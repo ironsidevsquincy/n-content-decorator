@@ -21,6 +21,16 @@ describe('Calling models', () => {
 			expect(applyModelsStub.calledOnce).to.be.true;
 		});
 
+		it('applies the default options if not specified', () => {
+			subject();
+			expect(applyModelsStub.getCall(0).args[1]).to.have.all.keys(['mutateOriginal', 'useCase', 'excludeTaxonomies']);
+		});
+
+		it('does not overwrite passed through options', () => {
+			subject({}, {mutateOriginal: true});
+			expect(applyModelsStub.getCall(0).args[1].mutateOriginal).to.be.true;
+		});
+
 	});
 
 	context('with option to mutate original object', () => {

@@ -20,9 +20,15 @@ Provides decoration for content sourced either directly from the next Elastic Se
 
 `useCase: 'stream-list-card'` used for card in stream list on stream page.
 
+`article-card` is the default option and need not be passed in.
+
 ###Excluded Taxonomies
 
 `excludeTaxonomies: true` prevents specific taxonomies (organisations, regions, people) from appearing in the tag that is returned.
+
+`excludeTaxonomies: false` leaves taxonomies unaffected.
+
+`false` is the default and need not be passed in.
 
 ##Example usage
 
