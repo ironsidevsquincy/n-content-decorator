@@ -19,7 +19,8 @@ module.exports = (content, options) => {
 	} else if (options.minorBranding) {
 		return {
 			tag,
-			branding
+			branding,
+			brand: null
 		};
 	}
 };

@@ -50,6 +50,7 @@ describe('Tag and Branding', () => {
 			const result = subject({}, options);
 			expect(result.branding.brandingValue).to.be.true;
 			expect(result.tag.tagValue).to.be.true;
+			expect(result.brand).to.be.null;
 		});
 
 	});
