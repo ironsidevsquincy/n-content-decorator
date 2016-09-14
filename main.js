@@ -1,13 +1,14 @@
-const basic = require('./models/basic');
-const extended = require('./models/extended');
-const tagAndBranding = require('./models/tag-and-branding');
+const applyModels = require('./models/index');
 
 module.exports = (content, options) => {
 
-		return Object.assign({},
-			basic(content),
-			extended(content, options),
-			tagAndBranding(content, options)
-		);
+	const decoration = applyModels(content, options);
+
+	if (options && options.mutateOriginal) {
+		Object.assign(content, decoration);
+		return;
+	} else {
+		return decoration;
+	}
 
 };

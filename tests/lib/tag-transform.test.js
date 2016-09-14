@@ -38,6 +38,7 @@ const fixtureGraphQLApi = {
 			'id': 'relatedItemId',
 			'url': 'relatedItemUrl',
 			'webUrl': 'relatedItemWebUrl',
+			'isPremium': 'isPremiumValue',
 			'title': 'relatedItemTitle'
 		}
 	]
@@ -94,8 +95,36 @@ describe('Tag Transformation', () => {
 			expect(result.url).to.equal('/topics/organisations/G7');
 		});
 
-		it('acquires the premium status for its related items by calling premiumTransform', () => {
-			expect(premiumTransformStub.calledOnce).to.be.true;
+		// it('acquires the premium status for its related items by calling premiumTransform', () => {
+		// 	expect(premiumTransformStub.calledOnce).to.be.true;
+		// });
+
+	});
+
+	context('acquiring premium status of related items from a graphQL API sourced tag', () => {
+
+		beforeEach(() => {
+			premiumTransformStub.returns(true);
+		});
+
+		it('uses its isPremium value (if present) to ascertain premium status of content', () => {
+			result = subject(fixtureGraphQLApi);
+			expect(result.items[0].isPremium).to.equal('isPremiumValue');
+			expect(premiumTransformStub.called).to.be.false;
+		});
+
+		it('calls premiumTransform (if only webUrl value is present) to ascertain premium status of content', () => {
+			fixtureGraphQLApi.items[0] = { webUrl: 'webUrlValue' };
+			result = subject(fixtureGraphQLApi);
+			expect(result.items[0].isPremium).to.equal(true);
+			expect(premiumTransformStub.called).to.be.true;
+		});
+
+		it('does not call premiumTransform (if neither isPremium nor webUrl are present) and premium status of content will be undefined', () => {
+			fixtureGraphQLApi.items[0] = { };
+			result = subject(fixtureGraphQLApi);
+			expect(result.items[0].isPremium).to.equal(undefined);
+			expect(premiumTransformStub.called).to.be.false;
 		});
 
 	});

@@ -1,16 +1,22 @@
-[![Coverage Status](https://coveralls.io/repos/github/Financial-Times/n-content-model/badge.svg?branch=master)](https://coveralls.io/github/Financial-Times/n-content-model?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/Financial-Times/n-content-decorator/badge.svg?branch=master)](https://coveralls.io/github/Financial-Times/n-content-decorator?branch=master)
 
-#n-content-model
+#n-content-decorator
 
-#v2
-
-Transforms content sourced either directly from the next Elastic Search cluster, or via the next-graphql-api, into summarised form for use in rendering content cards.
+Provides decoration for content sourced either directly from the next Elastic Search cluster, or via the next-graphql-api, for compatibility for rendering content cards.
 
 ##Options supported;
 
+###Decoration type
+
+`mutateOriginal: true` will mutate the object passed to it.
+
+`mutateOriginal: false` will return the decoration object, which can be merged in with the original object by the calling application (eg. `Object.assign(original, decoration)``).
+
+`false` is the default option and need not be passed in.
+
 ###Use cases;
 
-`useCase: 'article-card'` compatible with n-section card usage
+`useCase: 'article-card'` compatible with n-section card usage.
 
 `useCase: 'stream-list-card'` used for card in stream list on stream page.
 
@@ -22,40 +28,20 @@ Transforms content sourced either directly from the next Elastic Search cluster,
 
 ###With an array of content items
 
-```
-const contentModel = require('ft-n-content-model');
-
-const transformedContentArray = contentArray.map(content => {
-  contentModel(content, {options});
-});
+####With `mutateOriginal: false`
 
 ```
-##Key changes from v1
+const decoration = require('ft-n-content-decoration');
 
-- no-image variant for article card not supported - recommend either remove image from content or don't provide image options when configuring content for n-section
-
-
-#v1
-
-Transforms content from Elastic Search into summarised form for specified use-cases.
-
-Use cases supported;
-
-`article-card` : compatible with n-section usage
-
-`article-card-no-image` : as article card, but with main image removed
-
-`stream-list-card` : used for card in stream list on stream page.
-
-## Example usage
-
-### With an array of content items
+contentArray.map(content => Object.assign(content, decoration(content, {options})));
 
 ```
-const contentModel = require('ft-n-content-model');
 
-const transformedContentArray = contentArray.map(content => {
-  contentModel(content, 'use-case');
-});
+####With `mutateOriginal: true`
+
+```
+const decorateContent = require('ft-n-content-decoration');
+
+contentArray.map(content => decorateContent(content, {options}));
 
 ```

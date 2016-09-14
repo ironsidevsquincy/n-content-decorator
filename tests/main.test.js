@@ -2,41 +2,49 @@ const expect = require('chai').expect;
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 
-const basicStub = sinon.stub();
-const extendedStub = sinon.stub();
-const tagAndBrandingStub = sinon.stub();
+const applyModelsStub = sinon.stub();
 
 const subject = proxyquire('../main', {
-	'./models/basic': basicStub,
-	'./models/extended': extendedStub,
-	'./models/tag-and-branding': tagAndBrandingStub
+	'./models/index': applyModelsStub
 });
 
 describe('Calling models', () => {
 
 	beforeEach(() => {
-		basicStub.reset();
-		extendedStub.reset();
-		tagAndBrandingStub.reset();
+		applyModelsStub.reset();
 	});
 
 	context('general', () => {
 
-		it('calls all three models', () => {
+		it('calls the \'apply models\' method', () => {
 			subject();
-			expect(basicStub.calledOnce).to.be.true;
-			expect(extendedStub.calledOnce).to.be.true;
-			expect(tagAndBrandingStub.calledOnce).to.be.true;
+			expect(applyModelsStub.calledOnce).to.be.true;
 		});
 
 	});
 
-	context('with specific use cases', () => {
+	context('with option to mutate original object', () => {
 
-		it('passes the use case option to the tag and branding model', () => {
-			subject({}, {useCase: 'useCase'});
-			expect(tagAndBrandingStub.calledWith({},{useCase: 'useCase'})).to.be.true;
+		it('adds new properties into the original object', () => {
+			const content = { original: true };
+			applyModelsStub.returns({ decoration: true });
+			subject(content, { mutateOriginal: true });
+			expect(content.decoration).to.exist;
 		});
+
 	});
+
+	context('without option to mutate original object', () => {
+
+		it('returns only the decoration', () => {
+			const content = { original: true };
+			applyModelsStub.returns({ decoration: true });
+			const result = subject(content, { mutateOriginal: false });
+			expect(result.decoration).to.exist;
+			expect(result.original).to.not.exist;
+		});
+
+	});
+
 
 });

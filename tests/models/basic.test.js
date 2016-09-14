@@ -16,15 +16,13 @@ describe('Basic model transform', () => {
 
 	it('returns the expected properties', () => {
 		const result = subject(content);
-		expect(Object.keys(result).length).to.equal(7);
+		expect(Object.keys(result).length).to.equal(5);
 		expect(result).to.have.all.keys([
-			'id',
 			'url',
 			'fullUrl',
-			'title',
 			'published',
 			'lastPublished',
-			'premium'
+			'isPremium'
 		]);
 	});
 
@@ -73,21 +71,41 @@ describe('Basic model transform', () => {
 
 	context('premium property', () => {
 
-		context('content has a webUrl value', () => {
+		context('content has an isPremium value but no webUrl attribute', () => {
+
+			it('will use isPremium value to ascertain premium status of content', () => {
+				const result = subject({ isPremium: 'isPremiumValue' });
+				expect(premiumTransformStub.calledOnce).to.be.false;
+				expect(result.isPremium).to.equal('isPremiumValue');
+			});
+
+		});
+
+		context('content has a webUrl value but no isPremium attribute', () => {
 
 			it('will call premiumTransform to ascertain premium status of content', () => {
-				subject({ webUrl: 'foobar' });
+				subject({ webUrl: 'webUrlValue' });
 				expect(premiumTransformStub.calledOnce).to.be.true;
 			});
 
 		});
 
-		context('content does not have a webUrl value', () => {
+		context('content has both an isPremium and webUrl value', () => {
 
-			it('will not call premiumTransform and premium attribute value set to null', () => {
-				const result = subject({ webUrl: null });
+			it('will prioritise isPremium value to ascertain premium status of content', () => {
+				const result = subject({ isPremium: 'isPremiumValue', webUrl: 'webUrlValue' });
+				expect(premiumTransformStub.calledOnce).to.be.false;
+				expect(result.isPremium).to.equal('isPremiumValue');
+			});
+
+		});
+
+		context('content has neither an isPremium attribute nor a webUrl attribute', () => {
+
+			it('will not call premiumTransform and premium status of content will be undefined', () => {
+				const result = subject({ });
 				expect(premiumTransformStub.called).to.be.false;
-				expect(result.premium).to.equal(null);
+				expect(result.isPremium).to.equal(undefined);
 			});
 
 		});
