@@ -95,10 +95,6 @@ describe('Tag Transformation', () => {
 			expect(result.url).to.equal('/topics/organisations/G7');
 		});
 
-		// it('acquires the premium status for its related items by calling premiumTransform', () => {
-		// 	expect(premiumTransformStub.calledOnce).to.be.true;
-		// });
-
 	});
 
 	context('acquiring premium status of related items from a graphQL API sourced tag', () => {
