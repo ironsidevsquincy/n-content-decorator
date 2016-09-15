@@ -1,7 +1,13 @@
 {
-  "name": "ft-n-content-decorator",
+  "name": "@financial-times/n-content-decorator",
   "version": "0.0.0",
+  "description": "Decorates FT content prior to rendering",
   "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Financial-Times/n-content-decorator.git"
+  },
+  "license": "MIT",
   "dependencies": {
     "cheerio": "^0.19.0",
     "ft-n-article-branding": "^3.0.6"
