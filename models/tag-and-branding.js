@@ -12,9 +12,9 @@ module.exports = (content, options) => {
 
 	if (!options.minorBranding && content.type !== 'LiveBlog') {
 		if (brand) {
-			return { brand };
+			return { brand, branding: null };
 		} else {
-			return { tag };
+			return { tag, branding: null };
 		}
 	} else if (options.minorBranding) {
 		return {

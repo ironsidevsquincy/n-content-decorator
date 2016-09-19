@@ -24,6 +24,7 @@ describe('Tag and Branding', () => {
 			const result = subject({}, options);
 			expect(result.brand.brandValue).to.be.true;
 			expect(result.tag).to.not.exist;
+			expect(result.branding).to.be.null;
 		});
 
 		it('returns tag if brand does not exist', () => {
@@ -31,6 +32,7 @@ describe('Tag and Branding', () => {
 			const result = subject({}, options);
 			expect(result.brand).to.not.exist;
 			expect(result.tag.tagValue).to.be.true;
+			expect(result.branding).to.be.null;
 		});
 
 		it('returns undefined if content type is a live blog', () => {
