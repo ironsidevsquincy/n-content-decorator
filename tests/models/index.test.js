@@ -33,9 +33,9 @@ describe('Calling models', () => {
 
 	context('with specific use cases', () => {
 
-		it('passes the use case option to the tag and branding model', () => {
-			subject({}, {useCase: 'useCase'});
-			expect(tagAndBrandingStub.calledWith({},{useCase: 'useCase'})).to.be.true;
+		it('passes the options to the tag and branding model', () => {
+			subject({}, { options: true });
+			expect(tagAndBrandingStub.calledWith({},{ options: true })).to.be.true;
 		});
 	});
 

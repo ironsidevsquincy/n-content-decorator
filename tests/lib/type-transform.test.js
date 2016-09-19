@@ -46,17 +46,17 @@ describe('Type Transform', () => {
 
 	it('returns \'editors-pick\' for Editors Choice (ES sourced data)', () => {
 		const content = { standout: {editorsChoice: true} };
-		expect(subject(content, {useCase: 'article-card'})).to.equal('editors-pick');
+		expect(subject(content, {})).to.equal('editors-pick');
 	});
 
 	it('returns \'editors-pick\' for Editors Choice (graphQL Api sourced data)', () => {
 		const content = { isEditorsChoice: true };
-		expect(subject(content, {useCase: 'article-card'})).to.equal('editors-pick');
+		expect(subject(content, {})).to.equal('editors-pick');
 	});
 
-	it('does not return \'editors-pick\' for Editors choice when not article card use case', () => {
+	it('does not return \'editors-pick\' for Editors choice when minorBranding option is true', () => {
 		const content = { standout: {editorsChoice: true} };
-		expect(subject(content)).to.equal('article');
+		expect(subject(content, { minorBranding: true })).to.equal('article');
 
 	});
 
@@ -76,7 +76,7 @@ describe('Type Transform', () => {
 				tags: [ { property: 'value' } ],
 				standout: {editorsChoice: true}
 			};
-			expect(subject(content, {useCase: 'article-card'})).to.equal('live-blog');
+			expect(subject(content, {})).to.equal('live-blog');
 		});
 
 		it('prioritises editors pick 2nd', () => {
@@ -85,7 +85,7 @@ describe('Type Transform', () => {
 				tags: [ { property: 'value' } ],
 				standout: {editorsChoice: true}
 			};
-			expect(subject(content, {useCase: 'article-card'})).to.equal('editors-pick');
+			expect(subject(content, {})).to.equal('editors-pick');
 		});
 
 		it('prioritises FastFt 3rd', () => {
@@ -93,14 +93,14 @@ describe('Type Transform', () => {
 				type: 'FastFt',
 				tags: [ { property: 'value' } ],
 			};
-			expect(subject(content, {useCase: 'article-card'})).to.equal('fast-ft');
+			expect(subject(content, {})).to.equal('fast-ft');
 		});
 
 		it('prioritises opinion 4th', () => {
 			const content = {
 				tags: [ { property: 'value' } ]
 			};
-			expect(subject(content, {useCase: 'article-card'})).to.equal('opinion');
+			expect(subject(content, {})).to.equal('opinion');
 		});
 
 	});
