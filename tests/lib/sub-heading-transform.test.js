@@ -20,7 +20,7 @@ describe('Subheading', () => {
 		context('Has no summary but an opening', () => {
 			let fixture = {
 				summaries: [],
-				openingXML: '<p>Text <a href="http://www.ft.com/">Link Text</a></p><p>Ignored</p>'
+				openingHTML: '<p>Text <a href="http://www.ft.com/">Link Text</a></p><p>Ignored</p>'
 			};
 
 			it('should take text of first p of opening', () => {
@@ -29,14 +29,14 @@ describe('Subheading', () => {
 
 		});
 
-		context('Has no summary or opening, but does have a bodyXML', () => {
+		context('Has no summary or opening, but does have a bodyHTML', () => {
 			let fixture = {
 				summaries: [],
-				openingXML: undefined,
-				bodyXML: '<p>Text <a href="http://www.ft.com/">Link Text</a></p><p>Ignored</p>'
+				openingHTML: undefined,
+				bodyHTML: '<p>Text <a href="http://www.ft.com/">Link Text</a></p><p>Ignored</p>'
 			};
 
-			it('should use the text of the first p of bodyXML', () => {
+			it('should use the text of the first p of bodyHTML', () => {
 				expect(subject(fixture)).to.equal('Text Link Text');
 			});
 
@@ -45,8 +45,8 @@ describe('Subheading', () => {
 		context('Has nothing resembling a summary', () => {
 			let fixture = {
 				summaries: [],
-				openingXML: undefined,
-				bodyXML: undefined
+				openingHTML: undefined,
+				bodyHTML: undefined
 			};
 
 			it('should return undefined', () => {
