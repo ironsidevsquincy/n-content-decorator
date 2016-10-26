@@ -45,7 +45,7 @@ describe('Primary Tags Transform', () => {
 				context('the primaryTheme matches an excluded taxonomy', () => {
 
 					const primaryTheme = { taxonomy: 'regions', existingPrimaryTheme: true };
-					const primarySection = { taxonomy: 'regions', existingPrimarySection: true }
+					const primarySection = { taxonomy: 'regions', existingPrimarySection: true };
 
 					it('with exclude option OFF returns the primarySection', () => {
 						const content = { primaryTheme, primarySection };
@@ -63,7 +63,7 @@ describe('Primary Tags Transform', () => {
 
 			context('it only has a primary section', () => {
 
-				const primarySection = { taxonomy: 'regions', existingPrimarySection: true }
+				const primarySection = { taxonomy: 'regions', existingPrimarySection: true };
 
 				it('returns the primary section', () => {
 					const content = { primarySection };
@@ -72,7 +72,19 @@ describe('Primary Tags Transform', () => {
 
 			});
 
-			context('it has neither a primary section nor theme', () => {
+			context('it has an excluded primary theme and branding', () => {
+
+				const primaryTheme = { taxonomy: 'regions', existingPrimaryTheme: true };
+				const branding = { taxonomy: 'brand', existingBranding: true};
+
+				it('returns the primary section', () => {
+					const content = { primaryTheme, branding };
+					expect(subject(content, { excludeTaxonomies: true }).existingBranding).to.be.true;
+				});
+
+			});
+
+			context('it has neither a primary section nor theme nor branding', () => {
 
 				it('returns undefined', () => {
 					const content = {};
