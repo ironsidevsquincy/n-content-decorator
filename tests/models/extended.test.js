@@ -36,7 +36,6 @@ describe('Extended model transform', () => {
 			'liveBlog',
 			'relatedContent',
 			'summary',
-			'subheading',
 			'type',
 		]);
 	});
