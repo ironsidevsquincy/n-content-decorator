@@ -2,7 +2,7 @@
 
 #n-content-decorator
 
-Provides decoration for content sourced either directly from the next Elastic Search cluster, or via the next-graphql-api, for compatibility for rendering content cards.
+Provides decoration for content sourced either directly from the next Elastic Search cluster, or via the next-api, for compatibility for rendering content cards.
 
 ##Options supported;
 
